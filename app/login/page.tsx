@@ -9,27 +9,14 @@ type Role = 'admin' | 'officer'
 
 export default function LoginPageAlt() {
   const [role, setRole] = useState<Role>('officer')
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoggingIn, setIsLoggingIn] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoggingIn(true)
-    setError(null)
     await new Promise(resolve => setTimeout(resolve, 800))
-    
-    const formData = new FormData()
-    formData.append('role', role)
-    formData.append('email', email)
-    formData.append('password', password)
-
-    const res = await login(formData)
-    if (res?.error) {
-      setError(res.error)
-      setIsLoggingIn(false)
-    }
+    await login(role)
   }
 
   return (
@@ -144,19 +131,17 @@ export default function LoginPageAlt() {
             <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-300">
-                  {role === 'admin' ? 'Administrator Email' : 'Officer Email'}
+                  {role === 'admin' ? 'Administrator ID' : 'Officer ID'}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Fingerprint className="h-4 w-4 text-slate-500" />
                   </div>
                   <input 
-                    type="email" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={role === 'admin' ? 'admin@aegismesh.com' : 'officer@aegismesh.com'}
-                    required
-                    className="w-full pl-10 pr-4 py-3 bg-slate-900 border border-white/10 rounded-lg text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    type="text" 
+                    defaultValue={role === 'admin' ? 'ADM-001' : 'OFC-924'}
+                    readOnly
+                    className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-white/10 rounded-lg text-slate-300 focus:outline-none focus:border-slate-500 transition-colors cursor-not-allowed opacity-70"
                   />
                 </div>
               </div>
@@ -180,12 +165,6 @@ export default function LoginPageAlt() {
                   />
                 </div>
               </div>
-
-              {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md text-red-500 text-sm font-medium">
-                  {error}
-                </div>
-              )}
 
               <button 
                 type="submit" 
