@@ -3,7 +3,19 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-export async function login(role: 'admin' | 'officer') {
+export async function login(formData: FormData) {
+  const role = formData.get('role') as 'admin' | 'officer'
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  // Mock secure validation
+  const isValidAdmin = role === 'admin' && email === 'admin@aegismesh.com' && password === 'admin123'
+  const isValidOfficer = role === 'officer' && email === 'officer@aegismesh.com' && password === 'officer123'
+
+  if (!isValidAdmin && !isValidOfficer) {
+    return { success: false, error: 'Invalid credentials or unauthorized role.' }
+  }
+
   const cookieStore = await cookies()
   cookieStore.set('auth-session', role, { 
     path: '/',
