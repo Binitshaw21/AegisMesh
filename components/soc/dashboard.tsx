@@ -9,6 +9,9 @@ import { ThreatsChart } from "@/components/soc/threats-chart"
 import { RequestsTable } from "@/components/soc/requests-table"
 import { AgentsView } from "@/components/soc/agents-view"
 import { PolicyView } from "@/components/soc/policy-view"
+import { BillingView } from "@/components/soc/billing-view"
+import { ProfileView } from "@/components/soc/profile-view"
+import { SupportView } from "@/components/soc/support-view"
 import {
   activeAgents,
   networkRequests,
@@ -27,6 +30,18 @@ const titles: Record<TabId, { title: string; subtitle: string }> = {
   policy: {
     title: "Policy Rules",
     subtitle: "Enforcement rules governing agent network behavior.",
+  },
+  billing: {
+    title: "Billing & Subscriptions",
+    subtitle: "Manage your AegisMesh plan and resource limits.",
+  },
+  profile: {
+    title: "Officer Profile",
+    subtitle: "Manage your personal credentials and security settings.",
+  },
+  support: {
+    title: "Help & Support",
+    subtitle: "Knowledge base, technical docs, and live support.",
   },
 }
 
@@ -123,6 +138,12 @@ export function Dashboard() {
           )}
 
           {active === "policy" && <PolicyView />}
+
+          {active === "billing" && <BillingView />}
+
+          {active === "profile" && <ProfileView />}
+
+          {active === "support" && <SupportView />}
         </div>
       </main>
     </div>

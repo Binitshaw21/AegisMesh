@@ -1,17 +1,20 @@
 "use client"
 
-import { Activity, FileWarning, ScrollText, Shield, LogOut } from "lucide-react"
+import { Activity, FileWarning, ScrollText, Shield, LogOut, CreditCard, User, LifeBuoy } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { logout } from "@/app/actions/auth"
 
-export type TabId = "agents" | "threats" | "policy"
+export type TabId = "agents" | "threats" | "policy" | "billing" | "profile" | "support"
 
-const tabs: { id: TabId; label: string; icon: LucideIcon; badge?: string }[] = [
-  { id: "agents", label: "Active Agents", icon: Activity, badge: "6" },
-  { id: "threats", label: "Threat Logs", icon: FileWarning, badge: "7" },
-  { id: "policy", label: "Policy Rules", icon: ScrollText },
+const tabs: { id: TabId; label: string; icon: LucideIcon; badge?: string; section?: string }[] = [
+  { id: "agents", label: "Active Agents", icon: Activity, badge: "6", section: "Monitoring" },
+  { id: "threats", label: "Threat Logs", icon: FileWarning, badge: "7", section: "Monitoring" },
+  { id: "policy", label: "Policy Rules", icon: ScrollText, section: "Monitoring" },
+  { id: "billing", label: "Billing", icon: CreditCard, section: "Account" },
+  { id: "profile", label: "Profile", icon: User, section: "Account" },
+  { id: "support", label: "Help & Support", icon: LifeBuoy, section: "Account" },
 ]
 
 export function Sidebar({
@@ -34,42 +37,48 @@ export function Sidebar({
       </div>
 
       <nav className="flex flex-col gap-1" aria-label="Primary">
-        <p className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Monitoring
-        </p>
-        {tabs.map((tab) => {
-          const Icon = tab.icon
-          const isActive = active === tab.id
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => onChange(tab.id)}
-              aria-current={isActive ? "page" : undefined}
-              className={cn(
-                "flex items-center justify-between rounded-md px-2.5 py-2 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                  : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
-              )}
-            >
-              <span className="flex items-center gap-2.5">
-                <Icon
-                  className={cn(
-                    "size-4",
-                    isActive ? "text-primary" : "text-muted-foreground",
-                  )}
-                />
-                {tab.label}
-              </span>
-              {tab.badge && (
-                <span className="rounded bg-secondary px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          )
-        })}
+        {["Monitoring", "Account"].map((sectionName) => (
+          <div key={sectionName} className="mb-4 last:mb-0">
+            <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              {sectionName}
+            </p>
+            <div className="flex flex-col gap-1">
+              {tabs.filter(t => t.section === sectionName).map((tab) => {
+                const Icon = tab.icon
+                const isActive = active === tab.id
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => onChange(tab.id)}
+                    aria-current={isActive ? "page" : undefined}
+                    className={cn(
+                      "flex items-center justify-between rounded-md px-2.5 py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                        : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
+                    )}
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <Icon
+                        className={cn(
+                          "size-4",
+                          isActive ? "text-primary" : "text-muted-foreground",
+                        )}
+                      />
+                      {tab.label}
+                    </span>
+                    {tab.badge && (
+                      <span className="rounded bg-secondary px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                        {tab.badge}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       <div className="mt-auto flex flex-col gap-3">
